@@ -14,6 +14,7 @@ typedef struct s_philo
 {
 	int				id;
 	long long		last_eat_time;
+	int				eat_count;
 	pthread_t		thread;
 	pthread_mutex_t	fork;
 	t_philo			*next;
@@ -29,9 +30,17 @@ typedef struct s_data
 	int				sleep_time;
 	int				eat_num;
 	long long		start_time;
+	pthread_mutex_t	printer;
+	int				dead;
 	t_philo			*philo;
 }	t_data;
 
-int	ft_atoi(const char *nptr);
+int			ft_atoi(const char *nptr);
+void		philo_think(t_philo *philo);
+void		philo_sleep(t_philo *philo);
+void		philo_eat(t_philo *philo);
+void		philo_fork_unlock(t_philo *philo);
+void		philo_fork_lock(t_philo *philo);
+long long	get_time(void);
 
 #endif

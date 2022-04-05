@@ -36,6 +36,7 @@ void	add_to_list(t_philo *philo, t_data *data, int n)
 	pthread_mutex_init(&new_philo->fork, NULL);
 	new_philo->id = n + 1;
 	new_philo->data = data;
+	new_philo->eat_count = 0;
 	while (philo->next != first)
 		philo = philo->next;
 	philo->next = new_philo;
@@ -52,6 +53,7 @@ void	init_philo_list(t_data *data)
 	pthread_mutex_init(&data->philo->fork, NULL);
 	data->philo->data = data;
 	data->philo->id = 1;
+	data->philo->eat_count = 0;
 	data->philo->next = data->philo;
 	data->philo->prev = data->philo;
 	n = 0;
@@ -61,18 +63,55 @@ void	init_philo_list(t_data *data)
 
 void	*philo_func(t_philo *philo)
 {
+	philo->last_eat_time = get_time();
 	if (philo->id % 2 == 0)
-		usleep(philo->data->eat_time);
-	pthread_mutex_lock(&philo->fork);
-	printf ("%i grabbed right fork\n", philo->id);
-	pthread_mutex_lock(&philo->prev->fork);
-	printf ("%i grabbed left fork\n", philo->id);
-	usleep(philo->data->eat_time);
-	pthread_mutex_unlock(&philo->prev->fork);
-	printf ("%i dropped left fork\n", philo->id);
-	pthread_mutex_unlock(&philo->fork);
-	printf ("%i dropped right fork\n", philo->id);
+		usleep((philo->data->eat_time - 10) * 1000);
+	while (philo->data->dead == 0 && (philo->eat_count < philo->data->eat_num \
+			|| philo->data->eat_num == -1))
+	{
+		philo_fork_lock(philo);
+		philo_eat(philo);
+		philo_fork_unlock(philo);
+		philo_sleep(philo);
+		philo_think(philo);
+	}
 	return (NULL);
+}
+
+int	eat_count_check(t_data *data)
+{
+	t_philo *philo;
+
+	philo = data->philo;
+	if (philo->eat_count != data->eat_num)
+		return (0);
+	philo = philo->next;
+	while (philo != data->philo)
+	{
+		if (philo->eat_count != data->eat_num)
+			return (0);
+		philo = philo->next;
+	}
+	return (1);
+}
+
+void	death_check(t_data *data)
+{
+	t_philo	*philo;
+
+	usleep (data->die_time - 10);
+	philo = data->philo;
+	while (data->dead == 0)
+	{
+		if (eat_count_check(data))
+			break ;
+		if (get_time() - philo->last_eat_time > data->die_time)
+		{
+			printf ("%lli %i died\n", get_time() - data->start_time, philo->id);
+			data->dead = 1;
+		}
+		philo = philo->next;
+	}
 }
 
 void	start_threads(t_data *data)
@@ -88,6 +127,7 @@ void	start_threads(t_data *data)
 		temp = temp->next;
 		n--;
 	}
+	death_check(data);
 	n = data->philo_num;
 	while (n > 0)
 	{
@@ -101,7 +141,6 @@ int	main(int argc, char **argv)
 {
 	t_data	*data;
 
-	data = (t_data *) malloc (sizeof(t_data));
 	if (argc < 5 || argc > 6)
 	{
 		printf ("Incorrect number of arguments\n");
@@ -112,12 +151,16 @@ int	main(int argc, char **argv)
 		printf("Arguments are formatted incorrectly\n");
 		exit (1);
 	}
+	data = (t_data *) malloc (sizeof(t_data));
 	data->philo_num = ft_atoi(argv[1]);
-	data->die_time = ft_atoi(argv[2]) * 1000;
-	data->eat_time = ft_atoi(argv[3]) * 1000;
-	data->sleep_time = ft_atoi(argv[4]) * 1000;
+	data->die_time = ft_atoi(argv[2]);
+	data->eat_time = ft_atoi(argv[3]);
+	data->sleep_time = ft_atoi(argv[4]);
+	data->dead = 0;
 	if (argv[5] != NULL)
 		data->eat_num = ft_atoi(argv[5]);
+	else
+		data->eat_num = -1;
 	data->start_time = get_time();
 	init_philo_list(data);
 	start_threads(data);

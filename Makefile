@@ -1,4 +1,4 @@
-SRC_FILES= main.c ft_atoi.c
+SRC_FILES= main.c ft_atoi.c philo_actions.c
 SRC=$(addprefix src/, $(SRC_FILES))
 OBJ=$(addprefix obj/, $(SRC_FILES:.c=.o))
 OBJ_DIR=obj
