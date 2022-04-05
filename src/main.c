@@ -121,6 +121,8 @@ void	start_threads(t_data *data)
 
 	n = data->philo_num;
 	temp = data->philo;
+	pthread_mutex_init(&data->printer, NULL);
+	data->start_time = get_time();
 	while (n > 0)
 	{
 		pthread_create(&temp->thread, NULL, (void *)&philo_func, temp);
@@ -161,7 +163,6 @@ int	main(int argc, char **argv)
 		data->eat_num = ft_atoi(argv[5]);
 	else
 		data->eat_num = -1;
-	data->start_time = get_time();
 	init_philo_list(data);
 	start_threads(data);
 }
