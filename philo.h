@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkenji-s <rkenji-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/06 02:28:23 by rkenji-s          #+#    #+#             */
+/*   Updated: 2022/04/06 02:28:23 by rkenji-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -7,8 +19,8 @@
 # include <stdio.h>
 # include <sys/time.h>
 
-typedef struct s_philo t_philo;
-typedef struct s_data t_data;
+typedef struct s_philo	t_philo;
+typedef struct s_data	t_data;
 
 typedef struct s_philo
 {

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   thread.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkenji-s <rkenji-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/06 02:28:15 by rkenji-s          #+#    #+#             */
+/*   Updated: 2022/04/06 02:28:15 by rkenji-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philo.h"
 
 static void	*philo_func(t_philo *philo)
@@ -19,7 +31,7 @@ static void	*philo_func(t_philo *philo)
 
 void	start_threads(t_data *data)
 {
-	int	n;
+	int		n;
 	t_philo	*temp;
 
 	n = data->philo_num;

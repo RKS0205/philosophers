@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   death_check.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkenji-s <rkenji-s@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/06 02:27:54 by rkenji-s          #+#    #+#             */
+/*   Updated: 2022/04/06 02:27:54 by rkenji-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../philo.h"
 
 static int	eat_count_check(t_data *data)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = data->philo;
 	if (philo->eat_count != data->eat_num)
