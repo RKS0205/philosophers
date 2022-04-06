@@ -92,6 +92,7 @@ int	eat_count_check(t_data *data)
 			return (0);
 		philo = philo->next;
 	}
+	data->dead = 1;
 	return (1);
 }
 
@@ -165,4 +166,5 @@ int	main(int argc, char **argv)
 		data->eat_num = -1;
 	init_philo_list(data);
 	start_threads(data);
+	free_all(data);
 }

@@ -10,6 +10,11 @@ void	philo_fork_lock(t_philo *philo)
 			printf ("%lli %i has taken a fork\n", get_time() \
 					- philo->data->start_time, philo->id);
 		pthread_mutex_unlock(&philo->data->printer);
+		if (philo->data->philo_num == 1)
+		{
+			usleep(philo->data->die_time * 1000);
+			return ;
+		}
 		pthread_mutex_lock(&philo->prev->fork);
 		pthread_mutex_lock(&philo->data->printer);
 		if (philo->data->dead == 0)
@@ -35,8 +40,8 @@ void	philo_eat(t_philo *philo)
 			printf ("%lli %i is eating\n", get_time() \
 					- philo->data->start_time, philo->id);
 		pthread_mutex_unlock(&philo->data->printer);
-		philo->eat_count++;
 		usleep(philo->data->eat_time * 1000);
+		philo->eat_count++;
 	}
 }
 

@@ -42,5 +42,6 @@ void		philo_eat(t_philo *philo);
 void		philo_fork_unlock(t_philo *philo);
 void		philo_fork_lock(t_philo *philo);
 long long	get_time(void);
+void		free_all(t_data *data);
 
 #endif
