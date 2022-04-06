@@ -31,6 +31,7 @@ typedef struct s_data
 	int				eat_num;
 	long long		start_time;
 	pthread_mutex_t	printer;
+	pthread_mutex_t	death_mutex;
 	int				dead;
 	t_philo			*philo;
 }	t_data;
@@ -43,5 +44,8 @@ void		philo_fork_unlock(t_philo *philo);
 void		philo_fork_lock(t_philo *philo);
 long long	get_time(void);
 void		free_all(t_data *data);
-
+void		death_check(t_data *data);
+void		init_philo_list(t_data *data);
+void		death_check(t_data *data);
+void		start_threads(t_data *data);
 #endif
