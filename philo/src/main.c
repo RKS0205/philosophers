@@ -12,22 +12,30 @@
 
 #include "../philo.h"
 
-int	check_args(char **argv)
+int	check_args(int argc, char **argv)
 {
 	int	i;
 	int	j;
 
 	i = 0;
+	if (argc < 5 || argc > 6)
+	{
+		printf ("Incorrect number of arguments\n");
+		return (1);
+	}
 	while (argv[++i] != NULL)
 	{
 		j = -1;
 		while (argv[i][++j] != '\0')
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (0);
+			{
+				printf ("Arguments are formatted incorrectly\n");
+				return (1);
+			}
 		}
 	}
-	return (1);
+	return (0);
 }
 
 long long	get_time(void)
@@ -42,22 +50,14 @@ int	main(int argc, char **argv)
 {
 	t_data	*data;
 
-	if (argc < 5 || argc > 6)
-	{
-		printf ("Incorrect number of arguments\n");
-		exit (1);
-	}
-	else if (check_args(argv) == 0)
-	{
-		printf("Arguments are formatted incorrectly\n");
-		exit (1);
-	}
+	if (check_args(argc, argv))
+		return (1);
 	data = (t_data *) malloc (sizeof(t_data));
 	data->philo_num = ft_atoi(argv[1]);
 	data->die_time = ft_atoi(argv[2]);
 	data->eat_time = ft_atoi(argv[3]);
 	data->sleep_time = ft_atoi(argv[4]);
-	data->dead = 0;
+	data->stop = 0;
 	if (argv[5] != NULL)
 		data->eat_num = ft_atoi(argv[5]);
 	else

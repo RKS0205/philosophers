@@ -12,21 +12,23 @@
 
 #include "../philo.h"
 
-static int	eat_count_check(t_data *data)
+int	eat_count_check(t_data *data)
 {
 	t_philo	*philo;
 
 	philo = data->philo;
-	if (philo->eat_count != data->eat_num)
+	if (check_eat_mutex(philo))
 		return (0);
 	philo = philo->next;
 	while (philo != data->philo)
 	{
-		if (philo->eat_count != data->eat_num)
+		if (check_eat_mutex(philo))
 			return (0);
 		philo = philo->next;
 	}
-	data->dead = 1;
+	pthread_mutex_lock(&data->stop_mutex);
+	data->stop = 1;
+	pthread_mutex_unlock(&data->stop_mutex);
 	return (1);
 }
 
@@ -34,19 +36,25 @@ void	death_check(t_data *data)
 {
 	t_philo	*philo;
 
-	usleep ((data->die_time * 1000) - 10);
 	philo = data->philo;
-	while (data->dead == 0)
+	usleep(5000);
+	while (check_stop(data))
 	{
-		if (eat_count_check(data))
-			break ;
-		pthread_mutex_lock(&data->death_mutex);
+		usleep(10);
+		pthread_mutex_lock(&philo->data->eat_time_mutex);
 		if (get_time() - philo->last_eat_time > data->die_time)
 		{
+			pthread_mutex_unlock(&philo->data->eat_time_mutex);
+			pthread_mutex_lock(&data->stop_mutex);
+			data->stop = 1;
+			pthread_mutex_unlock(&data->stop_mutex);
+			pthread_mutex_lock(&data->printer);
 			printf ("%lli %i died\n", get_time() - data->start_time, philo->id);
-			data->dead = 1;
+			pthread_mutex_unlock(&data->printer);
+			break ;
 		}
-		pthread_mutex_unlock(&data->death_mutex);
+		else
+			pthread_mutex_unlock(&philo->data->eat_time_mutex);
 		philo = philo->next;
 	}
 }
